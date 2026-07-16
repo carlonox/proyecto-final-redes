@@ -765,6 +765,110 @@
                     }
                 ],
                 "suspend": false
+            },
+            {
+                "filters": {},
+                "link_id": "1ca4eade-73e7-46fc-ae1d-014d170ee6bd",
+                "link_style": {},
+                "nodes": [
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/0"
+                        },
+                        "node_id": "5a4a4b44-da78-49d4-a980-40b1c9f16a67",
+                        "port_number": 0
+                    },
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/4"
+                        },
+                        "node_id": "172f342a-c54b-4b87-bc4c-87e7d44fb749",
+                        "port_number": 4
+                    }
+                ],
+                "suspend": false
+            },
+            {
+                "filters": {},
+                "link_id": "c2285a47-b7da-4558-89fd-4d7c7a58a442",
+                "link_style": {},
+                "nodes": [
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/0"
+                        },
+                        "node_id": "f240d3f0-46c7-4999-9f45-07fb067c6664",
+                        "port_number": 0
+                    },
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/4"
+                        },
+                        "node_id": "c5529bc8-604a-4e1a-949d-1d5465e4fdec",
+                        "port_number": 4
+                    }
+                ],
+                "suspend": false
+            },
+            {
+                "filters": {},
+                "link_id": "4ff54ed4-22b3-44a1-bb9f-3f2900222069",
+                "link_style": {},
+                "nodes": [
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/0"
+                        },
+                        "node_id": "2b901ecd-1d1b-42bc-b522-f4a8c4e9e0a9",
+                        "port_number": 0
+                    },
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/4"
+                        },
+                        "node_id": "ea000862-65a7-4862-b014-7ef2bc8a0bc8",
+                        "port_number": 4
+                    }
+                ],
+                "suspend": false
+            },
+            {
+                "filters": {},
+                "link_id": "e6f6969a-9bec-4071-84e7-0f6fa7d4bddf",
+                "link_style": {},
+                "nodes": [
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/0"
+                        },
+                        "node_id": "1ea5bee6-5a49-4ee8-b878-32d3ce6aca5a",
+                        "port_number": 0
+                    },
+                    {
+                        "adapter_number": 0,
+                        "label": {
+                            "style": "font-family: TypeWriter;font-size: 10.0;font-weight: bold;fill: #000000;fill-opacity: 1.0;",
+                            "text": "0/3"
+                        },
+                        "node_id": "34bb28f9-3834-4379-99cc-1d5529273778",
+                        "port_number": 3
+                    }
+                ],
+                "suspend": false
             }
         ],
         "nodes": [
@@ -863,7 +967,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config_content": "hostname Core_Bogota\ninterface FastEthernet0/0\n ip address 10.255.0.1 255.255.255.252\n no shutdown\ninterface Serial1/0.100 point-to-point\n ip address 10.255.1.1 255.255.255.252\n frame-relay interface-dlci 100\ninterface Serial1/0.101 point-to-point\n ip address 10.255.10.1 255.255.255.252\n frame-relay interface-dlci 101\ninterface Serial2/0\n ip address 10.255.2.1 255.255.255.252\n no shutdown\ninterface Serial2/1\n ip address 10.255.3.1 255.255.255.252\n no shutdown\ninterface GigabitEthernet3/0\n ip address 10.255.4.1 255.255.255.252\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -932,7 +1037,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config": "i1_startup-config.cfg"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1001,7 +1107,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config": "i1_startup-config.cfg"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1070,7 +1177,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config": "i1_startup-config.cfg"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1139,7 +1247,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config_content": "hostname Dist_Bogota\ninterface FastEthernet0/0\n ip address 10.255.0.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet2/0\n ip address 10.1.0.1 255.255.255.0\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1295,7 +1404,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config": "i1_startup-config.cfg"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1364,7 +1474,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config": "i1_startup-config.cfg"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1433,7 +1544,8 @@
                     "slot6": null,
                     "sparsemem": true,
                     "system_id": "FTX0945W0MY",
-                    "usage": ""
+                    "usage": "",
+                    "startup_config": "i1_startup-config.cfg"
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1707,7 +1819,7 @@
                     "cpus": 1,
                     "create_config_disk": false,
                     "hda_disk_image": "Servers/srv-dns-bog.qcow2",
-                    "hda_disk_image_md5sum": "1917e77358da6ca56816502fdadfb218",
+                    "hda_disk_image_md5sum": "9917cccb422d07fafb2fcb80871682d7",
                     "hda_disk_interface": "virtio",
                     "hdb_disk_image": "",
                     "hdb_disk_image_md5sum": null,
@@ -1777,7 +1889,7 @@
                     "cpus": 1,
                     "create_config_disk": false,
                     "hda_disk_image": "Servers/srv-web-cuc.qcow2",
-                    "hda_disk_image_md5sum": "040e22538b875427a7ed68ffe8c508a2",
+                    "hda_disk_image_md5sum": "4e1dd2734176c20aac6b7fff1a7b4769",
                     "hda_disk_interface": "none",
                     "hdb_disk_image": "",
                     "hdb_disk_image_md5sum": null,
@@ -1810,8 +1922,8 @@
                 "symbol": ":/symbols/server.svg",
                 "template_id": "4e3c0692-05ef-4eb6-85a3-bc8ca713186e",
                 "width": 49,
-                "x": 200,
-                "y": 120,
+                "x": 305,
+                "y": 180,
                 "z": 1
             },
             {
@@ -1847,7 +1959,7 @@
                     "cpus": 1,
                     "create_config_disk": false,
                     "hda_disk_image": "Servers/srv-ldap-sm.qcow2",
-                    "hda_disk_image_md5sum": "ff92eb89592d5c63538c69ef0d694b3d",
+                    "hda_disk_image_md5sum": "29d633f78cf1f12fa34b51cbb0bf1ec8",
                     "hda_disk_interface": "none",
                     "hdb_disk_image": "",
                     "hdb_disk_image_md5sum": null,
@@ -1880,8 +1992,8 @@
                 "symbol": ":/symbols/server.svg",
                 "template_id": "4e3c0692-05ef-4eb6-85a3-bc8ca713186e",
                 "width": 49,
-                "x": 222,
-                "y": -345,
+                "x": 292,
+                "y": -221,
                 "z": 1
             },
             {
@@ -1917,7 +2029,7 @@
                     "cpus": 1,
                     "create_config_disk": false,
                     "hda_disk_image": "Servers/srv-ldap-bar.qcow2",
-                    "hda_disk_image_md5sum": "9e8530928a661bd8c335d70e620daa78",
+                    "hda_disk_image_md5sum": "7a89ff5023266bfa43f7c817e979606b",
                     "hda_disk_interface": "none",
                     "hdb_disk_image": "",
                     "hdb_disk_image_md5sum": null,
@@ -1950,8 +2062,8 @@
                 "symbol": ":/symbols/server.svg",
                 "template_id": "4e3c0692-05ef-4eb6-85a3-bc8ca713186e",
                 "width": 49,
-                "x": 200,
-                "y": 70,
+                "x": 304,
+                "y": 40,
                 "z": 1
             },
             {
