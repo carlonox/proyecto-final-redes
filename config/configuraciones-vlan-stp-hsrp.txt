@@ -1,0 +1,155 @@
+# ============================================
+# CONFIGURACIONES DE RED - Proyecto Final
+# VLANs, STP, HSRP
+# ============================================
+
+# ============================================
+# 1. CONFIGURACIÓN DE VLANs (Switches IOU L2)
+# ============================================
+
+# Sw_Bogota, Sw_Cucuta, Sw_SantaMarta, Sw_Barranquilla
+# En cada switch, crear las VLANs:
+
+# VLANs por departamento (aplicar en cada switch)
+vlan 10
+ name Ingenieria
+vlan 20
+ name Area_Tecnica
+vlan 30
+ name Marketing
+vlan 40
+ name Internet_BA
+vlan 50
+ name Administracion
+vlan 99
+ name Servidores
+exit
+
+# Asignar puertos a VLANs (ejemplo Sw_Bogota)
+# Puerto al router de distribucion (trunk)
+interface range e0/0
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,40,99
+ description Enlace a Dist_Bogota (Trunk)
+!
+# Puertos de acceso
+interface e0/1
+ switchport mode access
+ switchport access vlan 10
+ description PC_Ingenieria
+!
+interface e0/2
+ switchport mode access
+ switchport access vlan 20
+ description PC_Area_Tecnica
+!
+interface e0/3
+ switchport mode access
+ switchport access vlan 40
+ description PC_Internet_Demanda
+!
+
+# ============================================
+# 2. CONFIGURACIÓN STP (PVST+)
+# ============================================
+
+# Sw_Bogota - Designado como Root Bridge para todas las VLANs
+spanning-tree vlan 10 priority 4096
+spanning-tree vlan 20 priority 4096
+spanning-tree vlan 30 priority 4096
+spanning-tree vlan 40 priority 4096
+spanning-tree vlan 50 priority 4096
+spanning-tree vlan 99 priority 4096
+
+# Sw_SantaMarta - Root Bridge secundario (si hay redundancia)
+spanning-tree vlan 10 priority 8192
+spanning-tree vlan 20 priority 8192
+spanning-tree vlan 30 priority 8192
+spanning-tree vlan 40 priority 8192
+spanning-tree vlan 50 priority 8192
+spanning-tree vlan 99 priority 8192
+
+# Verificacion STP
+# show spanning-tree
+# show spanning-tree vlan 10
+# show spanning-tree root
+
+# ============================================
+# 3. CONFIGURACIÓN HSRP (en Dist_Bogota y redundancia)
+# ============================================
+
+# NOTA: La topologia actual tiene 1 router de distribucion por ciudad.
+# HSRP requiere 2 routers por LAN para alta disponibilidad.
+# Si se agrega un segundo router de distribucion:
+
+# --- En Dist_Bogota (Activo) ---
+interface GigabitEthernet2/0
+ standby version 2
+ standby 10 ip 10.1.0.254    # IP virtual del gateway
+ standby 10 priority 110      # Mas alta = activo
+ standby 10 preempt           # Recupera rol al volver
+ standby 10 name HSRP-BOGOTA
+ description Gateway LAN Bogota (HSRP)
+!
+# show standby brief
+
+# --- En Dist_Bogota_2 (Standby) ---
+interface GigabitEthernet2/0
+ standby version 2
+ standby 10 ip 10.1.0.254
+ standby 10 priority 100       # Mas baja = standby
+ standby 10 preempt
+ standby 10 name HSRP-BOGOTA
+!
+# show standby brief
+
+# ============================================
+# 4. CONFIGURACIÓN EIGRP (Verificacion)
+# ============================================
+
+# En cada router core y distribucion:
+router eigrp 100
+ network 10.0.0.0
+ passive-interface default
+ no passive-interface Serial1/0
+ no passive-interface Serial2/0
+ no passive-interface Serial2/1
+ no passive-interface GigabitEthernet3/0
+ no passive-interface FastEthernet0/0
+!
+# Verificacion:
+# show ip eigrp neighbors
+# show ip route eigrp
+# show ip protocols
+
+# ============================================
+# 5. FRAME-RELAY (Switch FR)
+# ============================================
+
+# Configuracion del Frame-Relay Switch
+frame-relay switching
+!
+interface Serial1/0
+ description Puerto a Core_Bogota
+ encapsulation frame-relay
+ frame-relay intf-type dce
+ frame-relay route 100 interface Serial2/0 200
+ frame-relay route 101 interface Serial3/0 301
+ no shutdown
+!
+interface Serial2/0
+ description Puerto a Core_SantaMarta
+ encapsulation frame-relay
+ frame-relay intf-type dce
+ frame-relay route 200 interface Serial1/0 100
+ frame-relay route 201 interface Serial3/0 302
+ no shutdown
+!
+interface Serial3/0
+ description Puerto a Core_Barranquilla
+ encapsulation frame-relay
+ frame-relay intf-type dce
+ frame-relay route 301 interface Serial1/0 101
+ frame-relay route 302 interface Serial2/0 201
+ no shutdown
+!

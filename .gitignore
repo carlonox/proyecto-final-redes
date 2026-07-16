@@ -1,7 +1,22 @@
-*.log
-*.tmp
-__pycache__
+# Proyecto Final Redes .gitignore
+# Excluir archivos runtime de GNS3
+projects/
+*.ghost
+*.lock
+*.pid
+
+# Excluir entornos virtuales
+.venv/
+venv/
+
+# Excluir archivos temporales
+__pycache__/
 *.pyc
+*.pyo
+
+# Excluir ZIPs
+*.zip
+
+# Excluir archivos de sistema
 .DS_Store
-.vscode/
-.idea/
+Thumbs.db

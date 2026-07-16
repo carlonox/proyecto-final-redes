@@ -3,13 +3,14 @@
 # Comandos útiles para gestionar el proyecto
 # ===========================================
 
-.PHONY: help build up down restart status logs shell clean info
+.PHONY: help build up down restart status logs shell clean info setup
 
 help:
 	@echo ""
 	@echo "=== PROYECTO FINAL REDES 2025967 ==="
 	@echo ""
 	@echo "Comandos disponibles:"
+	@echo "  make setup    - Setup completo (git-lfs, imágenes, build, up)"
 	@echo "  make build    - Construir imagen Docker"
 	@echo "  make up       - Levantar contenedor (docker compose up -d)"
 	@echo "  make down     - Detener contenedor"
@@ -20,7 +21,12 @@ help:
 	@echo "  make ps       - Ver procesos del contenedor"
 	@echo "  make info     - Información del proyecto"
 	@echo "  make test     - Probar conectividad de la red"
+	@echo "  make servicios - Configurar servicios en servidores (QCOW2)"
+	@echo "  make test-conectividad - Ejecutar pruebas de conectividad"
 	@echo ""
+
+setup:
+	bash setup.sh
 
 build:
 	docker compose -f docker/docker-compose.yml build
@@ -63,6 +69,18 @@ info:
 	@echo "  IOU:       $$(ls /proyecto/imagenes/IOU/*.bin 2>/dev/null | wc -l) imagenes"
 	@echo "  QEMU:      $$(ls /proyecto/imagenes/QEMU/Servers/*.qcow2 2>/dev/null | wc -l) discos"
 	@echo "Total:       $$(du -sh /proyecto/ 2>/dev/null | cut -f1)"
+
+servicios:
+	@echo "=== Configurando servicios en servidores ==="
+	docker cp scripts/configurar-servicios-total.sh gns3-proyecto-final:/scripts/
+	docker exec gns3-proyecto-final chmod +x /scripts/configurar-servicios-total.sh
+	docker exec gns3-proyecto-final bash /scripts/configurar-servicios-total.sh
+
+test-conectividad:
+	@echo "=== Pruebas de conectividad ==="
+	docker cp scripts/test-conectividad.sh gns3-proyecto-final:/scripts/
+	docker exec gns3-proyecto-final chmod +x /scripts/test-conectividad.sh
+	docker exec gns3-proyecto-final bash /scripts/test-conectividad.sh
 
 test:
 	@echo "=== Test de conectividad ==="

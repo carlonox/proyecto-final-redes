@@ -30,6 +30,13 @@ implementada en **GNS3** con **Docker** para portabilidad total.
 
 ### 🐳 CÓMO USAR (Docker)
 
+#### 🚀 Un solo comando (recomendado)
+```bash
+bash setup.sh
+```
+Esto instala git-lfs, descarga imágenes, construye y levanta GNS3 automáticamente.
+
+#### Paso a paso manual
 #### Requisitos:
 - Docker Engine 24+ con Docker Compose
 - WSL2 con virtualización habilitada (Windows)
@@ -40,14 +47,16 @@ implementada en **GNS3** con **Docker** para portabilidad total.
 ```bash
 git clone <repo> /proyecto
 cd /proyecto
+git lfs pull   # Descargar imágenes IOS, IOU y QEMU
 ```
 
 #### Paso 2: Levantar
 ```bash
 # Opción A: Usando docker compose directamente
-docker compose -f docker/docker-compose.yml up -d
+docker compose -f docker/docker-compose.yml up -d --build
 
 # Opción B: Usando make (si lo tienes instalado)
+make build
 make up
 ```
 
@@ -63,6 +72,17 @@ curl http://localhost:3080/v2/version
 # En Windows: http://localhost:3080
 # O instalar GNS3 GUI local y conectar a localhost:3080
 ```
+
+#### Paso 5: Configurar servicios en servidores
+```bash
+# Dentro del container GNS3:
+DISK_PATH=/data/imagenes/QEMU/Servers bash scripts/configurar-servidores.sh
+DISK_PATH=/data/imagenes/QEMU/Servers bash scripts/configurar-servicios.sh
+DISK_PATH=/data/imagenes/QEMU/Servers bash scripts/configurar-pendientes.sh
+```
+
+#### Paso 6: Configurar VLANs, STP y HSRP
+Ver archivo `config/configuraciones-vlan-stp-hsrp.txt` para comandos a aplicar en los dispositivos.
 
 ### 🖥️ CÓMO USAR (Nativo - sin Docker)
 
@@ -113,6 +133,26 @@ bash docker/setup-native.sh
 #   }
 # }
 ```
+
+|### 📦 ENTREGABLES GENERADOS
+| Archivo | Contenido |
+|---|---|
+| `Documentacion-Proyecto-Final-Redes.docx` | Documento Word completo: IP, SOs, servicios, networking, pruebas |
+| `Plan-IP-Proyecto-Final.xlsx` | Excel con 6 hojas: Portada, VLSM, Subredes, Dispositivos, NAT, IPv6 |
+| `Plan-IP-Proyecto-Final.html` | Vista HTML del plan IP (abrir en navegador) |
+| `Plan-IP-Proyecto-Final.csv` | IP planning para Excel (formato CSV) |
+| `Banco-Preguntas-Sustentacion.md` | 122 preguntas con respuestas para sustentación |
+| `Documentacion-Proyecto-Final-Redes.md` | Documentación técnica completa |
+| `config/configuraciones-vlan-stp-hsrp.txt` | Configuraciones de VLANs, STP y HSRP listas para aplicar |
+| `Proyecto-Final-Redes.gns3` | Topología GNS3 (28 nodos) |
+| `scripts/` | Scripts de automatización de servidores |
+
+### 🤖 CI/CD (GitHub Actions)
+Al hacer `git push` a `main`, el workflow en `.github/workflows/docker-publish.yml`:
+1. Compila la imagen Docker automáticamente
+2. La publica en `ghcr.io/carlonox/proyecto-final-redes/servidor-gns3`
+3. Tus compañeros descargan la imagen pre-compilada (no necesitan compilar)
+4. Ver `SECURITY-GHCR.md` para hacer la imagen pública
 
 ### 📚 DOCUMENTACIÓN
 | Archivo | Contenido |

@@ -50,8 +50,6 @@ echo " API:    http://localhost:3080/v2/version"
 echo "============================================"
 echo ""
 
-# Arrancar GNS3 server
-exec gns3server --daemon --local 2>&1
-
-# Mantener el contenedor vivo (en caso de que --daemon no funcione)
-tail -f /dev/null
+# Arrancar GNS3 server (primer plano — sin --daemon)
+echo "> gns3server --local"
+exec gns3server --local 2>&1

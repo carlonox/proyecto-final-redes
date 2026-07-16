@@ -1,21 +1,24 @@
-version: '3.9'
-
 services:
   gns3-server:
+    # === IMAGEN ===
+    # Por defecto: descarga desde GHCR (no requiere compilar)
+    # Para compilar local: docker compose build
+    image: ghcr.io/carlonox/proyecto-final-redes/servidor-gns3:latest
     build:
       context: ..
       dockerfile: Dockerfile
-    image: proyecto-final-redes:latest
     container_name: gns3-proyecto-final
     hostname: gns3-server
     restart: unless-stopped
     
-    # === HARDWARE PASSTHROUGH (WSL2 compatible) ===
+    # === RED: accesible desde Windows/WSL ===
     privileged: true
-    network_mode: "host"
     pid: "host"
     ipc: "host"
     userns_mode: "host"
+    ports:
+      - "3080:3080"
+      - "5000-5050:5000-5050"
     
     devices:
       - "/dev/kvm:/dev/kvm"         # KVM acceleration para QEMU
@@ -35,11 +38,11 @@ services:
     volumes:
       # === DATOS DEL PROYECTO ===
       - ../imagenes:/data/imagenes:ro           # Imágenes IOS/IOU/QEMU (solo lectura)
-      - ../Proyecto-Final-Redes.gns3:/data/proyecto.gns3:ro  # Topología
+      - ../Proyecto-Final-Redes.gns3:/data/projects/Proyecto-Final-Redes/Proyecto-Final-Redes.gns3:rw  # Topología
       
       # === CONFIGURACION GNS3 ===
-      - ../config/gns3_server.conf:/etc/gns3/gns3_server.conf:ro
-      - ../config/gns3_controller.conf:/etc/gns3/gns3_controller.conf:ro
+      - ../config/gns3_server.conf:/root/.config/GNS3/2.2/gns3_server.conf:ro
+      - ../config/gns3_controller.conf:/root/.config/GNS3/2.2/gns3_controller.conf:ro
       
       # === PERSISTENCIA (se crean en tiempo de ejecución) ===
       - gns3-projects:/data/projects          # Proyectos GNS3
@@ -80,7 +83,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 120s
       
     # === RECURSOS ===
     deploy:

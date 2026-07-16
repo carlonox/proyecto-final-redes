@@ -17,8 +17,12 @@ ENV TZ=America/Bogota
 # ===========================================
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get update -qq && \
-    apt-get install -y -qq --no-install-recommends \
+# Agregar PPA de GNS3 para ubridge y dynamips
+RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends software-properties-common && \
+    add-apt-repository -y ppa:gns3/ppa && \
+    apt-get update -qq
+
+RUN apt-get install -y -qq --no-install-recommends \
         # === GNS3 Server ===
         python3 \
         python3-pip \
@@ -71,8 +75,7 @@ RUN apt-get update -qq && \
 # 2. INSTALAR GNS3 SERVER
 # ===========================================
 RUN pip3 install --break-system-packages --no-cache-dir \
-        gns3-server==2.2.59 \
-        gns3-mcp-server
+        gns3-server==2.2.59
 
 # ===========================================
 # 3. CONFIGURAR DIRECTORIOS

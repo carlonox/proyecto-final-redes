@@ -1,0 +1,68 @@
+# ===========================================
+# Workflow: Publicar imagen Docker en GHCR
+# Proyecto Final Redes 2025967
+# ===========================================
+name: docker-publish
+
+# Se activa al hacer push a main y en PRs
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "*.md"
+      - "*.csv"
+      - "*.html"
+      - ".gitignore"
+      - "imagenes/**"
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  # La imagen se publica en: ghcr.io/carlonox/proyecto-final-redes/servidor-gns3
+  IMAGEN: servidor-gns3
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # Necesario para GHCR
+      packages: write
+
+    steps:
+      # 1. Descargar código (sin imágenes LFS — pesan ~9GB y no van en la imagen)
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: false  # No bajar imágenes — se inyectan en el Dockerfile
+
+      # 2. Iniciar sesión en GHCR con el token automático
+      - name: Login a GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 3. Extraer metadatos para las etiquetas
+      - name: Metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGEN }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,prefix=commit-
+
+      # 4. Build y push
+      - name: Build and Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # No cache del host — build fresco siempre
+          no-cache: false

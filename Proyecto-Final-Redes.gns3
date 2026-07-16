@@ -966,9 +966,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Core_Bogota\ninterface FastEthernet0/0\n ip address 10.255.0.1 255.255.255.252\n no shutdown\ninterface Serial1/0.100 point-to-point\n ip address 10.255.1.1 255.255.255.252\n frame-relay interface-dlci 100\ninterface Serial1/0.101 point-to-point\n ip address 10.255.10.1 255.255.255.252\n frame-relay interface-dlci 101\ninterface Serial2/0\n ip address 10.255.2.1 255.255.255.252\n no shutdown\ninterface Serial2/1\n ip address 10.255.3.1 255.255.255.252\n no shutdown\ninterface GigabitEthernet3/0\n ip address 10.255.4.1 255.255.255.252\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config_content": "hostname Core_Bogota\ninterface FastEthernet0/0\n ip address 10.255.0.1 255.255.255.252\n no shutdown\ninterface Serial1/0.100 point-to-point\n ip address 10.255.1.1 255.255.255.252\n frame-relay interface-dlci 100\ninterface Serial1/0.101 point-to-point\n ip address 10.255.10.1 255.255.255.252\n frame-relay interface-dlci 101\ninterface Serial2/0\n ip address 10.255.2.1 255.255.255.252\n no shutdown\ninterface Serial2/1\n ip address 10.255.3.1 255.255.255.252\n no shutdown\ninterface GigabitEthernet3/0\n ip address 10.255.4.1 255.255.255.252\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1036,9 +1036,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Core_Cucuta\ninterface FastEthernet0/0\n ip address 10.255.5.1 255.255.255.252\n no shutdown\ninterface Serial1/0\n ip address 10.255.6.1 255.255.255.252\n no shutdown\ninterface GigabitEthernet3/0\n ip address 10.255.4.2 255.255.255.252\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config": "i1_startup-config.cfg"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1106,9 +1106,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Core_SantaMarta\ninterface FastEthernet0/0\n ip address 10.255.7.1 255.255.255.252\n no shutdown\ninterface Serial1/0.200 point-to-point\n ip address 10.255.1.2 255.255.255.252\n frame-relay interface-dlci 200\ninterface Serial1/0.201 point-to-point\n ip address 10.255.8.1 255.255.255.252\n frame-relay interface-dlci 201\ninterface Serial2/0\n ip address 10.255.2.2 255.255.255.252\n no shutdown\ninterface Serial2/1\n ip address 10.255.9.1 255.255.255.252\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config": "i1_startup-config.cfg"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1176,9 +1176,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Core_Barranquilla\ninterface FastEthernet0/0\n ip address 10.255.11.1 255.255.255.252\n no shutdown\ninterface Serial1/0.301 point-to-point\n ip address 10.255.10.2 255.255.255.252\n frame-relay interface-dlci 301\ninterface Serial1/0.302 point-to-point\n ip address 10.255.8.2 255.255.255.252\n frame-relay interface-dlci 302\ninterface Serial1/1\n ip address 10.255.6.2 255.255.255.252\n no shutdown\ninterface Serial2/1\n ip address 10.255.3.2 255.255.255.252\n no shutdown\ninterface Serial2/2\n ip address 10.255.9.2 255.255.255.252\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config": "i1_startup-config.cfg"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1246,9 +1246,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Dist_Bogota\ninterface FastEthernet0/0\n ip address 10.255.0.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet2/0\n ip address 10.1.0.1 255.255.255.0\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config_content": "hostname Dist_Bogota\ninterface FastEthernet0/0\n ip address 10.255.0.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet2/0\n ip address 10.1.0.1 255.255.255.0\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1403,9 +1403,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Dist_Cucuta\ninterface FastEthernet0/0\n ip address 10.255.5.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet2/0\n ip address 10.2.0.1 255.255.255.0\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config": "i1_startup-config.cfg"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1473,9 +1473,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Dist_SantaMarta\ninterface FastEthernet0/0\n ip address 10.255.7.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet2/0\n ip address 10.3.0.1 255.255.255.0\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config": "i1_startup-config.cfg"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",
@@ -1543,9 +1543,9 @@
                     "slot5": null,
                     "slot6": null,
                     "sparsemem": true,
+                    "startup_config_content": "hostname Dist_Barranquilla\ninterface FastEthernet0/0\n ip address 10.255.11.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet2/0\n ip address 10.4.0.1 255.255.255.0\n no shutdown\nrouter eigrp 100\n network 10.0.0.0\n no auto-summary\nend",
                     "system_id": "FTX0945W0MY",
-                    "usage": "",
-                    "startup_config": "i1_startup-config.cfg"
+                    "usage": ""
                 },
                 "symbol": ":/symbols/router.svg",
                 "template_id": "e03c797e-1eb6-4cc6-813a-d5e4eb0471d4",

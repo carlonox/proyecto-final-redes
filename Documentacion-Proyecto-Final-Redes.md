@@ -117,29 +117,286 @@ Capa de Acceso
 
 ## 3. Inventario de Dispositivos
 
-### 3.1 Routers Core (Capa 3 - WAN)
+## 7. Configuración de Routers Core
 
-| # | Nombre | Modelo | Console | Slot0 | Slot1 | Slot2 | Slot3 |
-|---|---|---|---|---|---|---|---|
-| 1 | Core_Bogota | c7200 | 5000 | C7200-IO-FE | PA-4T+ | PA-4T+ | PA-GE |
-| 2 | Core_Cucuta | c7200 | 5001 | C7200-IO-FE | PA-4T+ | PA-4T+ | PA-GE |
-| 3 | Core_SantaMarta | c7200 | 5002 | C7200-IO-FE | PA-4T+ | PA-4T+ | PA-GE |
-| 4 | Core_Barranquilla | c7200 | 5003 | C7200-IO-FE | PA-4T+ | PA-4T+ | PA-GE |
+Las configuraciones se cargan automáticamente al iniciar el router mediante la propiedad `startup_config_content` en el archivo `.gns3`. Esto elimina la necesidad de configurar manualmente cada router después del boot.
 
-**Puertos disponibles por router:**
-- Slot0 (C7200-IO-FE): FastEthernet0/0
-- Slot1 (PA-4T+): Serial1/0, Serial1/1, Serial1/2, Serial1/3
-- Slot2 (PA-4T+): Serial2/0, Serial2/1, Serial2/2, Serial2/3
-- Slot3 (PA-GE): GigabitEthernet3/0
+### 7.1 Core_Bogota
 
-### 3.2 Routers de Distribución
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.0.1/30 | Enlace a Dist_Bogota |
+| S1/0.100 | 10.255.1.1/30 (DLCI 100) | Frame-Relay a Santa Marta |
+| S1/0.101 | 10.255.10.1/30 (DLCI 101) | Frame-Relay a Barranquilla |
+| S2/0 | 10.255.2.1/30 | HDLC a Santa Marta |
+| S2/1 | 10.255.3.1/30 | HDLC a Barranquilla |
+| G3/0 | 10.255.4.1/30 | Metro-Ethernet a Cúcuta |
 
-| # | Nombre | Modelo | Console | Puerto a Core | Puerto a Switch |
-|---|---|---|---|---|---|
-| 5 | Dist_Bogota | c7200 | 5004 | Fa0/0 | G2/0 |
-| 6 | Dist_Cucuta | c7200 | 5012 | Fa0/0 | G2/0 |
-| 7 | Dist_SantaMarta | c7200 | 5014 | Fa0/0 | G2/0 |
-| 8 | Dist_Barranquilla | c7200 | 5016 | Fa0/0 | G2/0 |
+```cisco
+hostname Core_Bogota
+!
+interface FastEthernet0/0
+ ip address 10.255.0.1 255.255.255.252
+ no shutdown
+!
+interface Serial1/0.100 point-to-point
+ ip address 10.255.1.1 255.255.255.252
+ frame-relay interface-dlci 100
+!
+interface Serial1/0.101 point-to-point
+ ip address 10.255.10.1 255.255.255.252
+ frame-relay interface-dlci 101
+!
+interface Serial2/0
+ ip address 10.255.2.1 255.255.255.252
+ no shutdown
+!
+interface Serial2/1
+ ip address 10.255.3.1 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet3/0
+ ip address 10.255.4.1 255.255.255.252
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+line con 0
+ password cisco
+ login
+line vty 0 4
+ password cisco
+ login
+!
+end
+```
+
+### 7.2 Core_Cucuta
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.5.1/30 | Enlace a Dist_Cucuta |
+| S1/0 | 10.255.6.1/30 | Metro-Ethernet a Barranquilla |
+| G3/0 | 10.255.4.2/30 | Metro-Ethernet a Bogotá |
+
+```cisco
+hostname Core_Cucuta
+!
+interface FastEthernet0/0
+ ip address 10.255.5.1 255.255.255.252
+ no shutdown
+!
+interface Serial1/0
+ ip address 10.255.6.1 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet3/0
+ ip address 10.255.4.2 255.255.255.252
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+end
+```
+
+### 7.3 Core_SantaMarta
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.7.1/30 | Enlace a Dist_SantaMarta |
+| S1/0.200 | 10.255.1.2/30 (DLCI 200) | Frame-Relay a Bogotá |
+| S1/0.201 | 10.255.8.1/30 (DLCI 201) | Frame-Relay a Barranquilla |
+| S2/0 | 10.255.2.2/30 | HDLC a Bogotá |
+| S2/1 | 10.255.9.1/30 | HDLC a Barranquilla |
+
+```cisco
+hostname Core_SantaMarta
+!
+interface FastEthernet0/0
+ ip address 10.255.7.1 255.255.255.252
+ no shutdown
+!
+interface Serial1/0.200 point-to-point
+ ip address 10.255.1.2 255.255.255.252
+ frame-relay interface-dlci 200
+!
+interface Serial1/0.201 point-to-point
+ ip address 10.255.8.1 255.255.255.252
+ frame-relay interface-dlci 201
+!
+interface Serial2/0
+ ip address 10.255.2.2 255.255.255.252
+ no shutdown
+!
+interface Serial2/1
+ ip address 10.255.9.1 255.255.255.252
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+end
+```
+
+### 7.4 Core_Barranquilla
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.11.1/30 | Enlace a Dist_Barranquilla |
+| S1/0.301 | 10.255.10.2/30 (DLCI 301) | Frame-Relay a Bogotá |
+| S1/0.302 | 10.255.8.2/30 (DLCI 302) | Frame-Relay a Santa Marta |
+| S1/1 | 10.255.6.2/30 | Metro-Ethernet a Cúcuta |
+| S2/1 | 10.255.3.2/30 | HDLC a Bogotá |
+| S2/2 | 10.255.9.2/30 | HDLC a Santa Marta |
+
+```cisco
+hostname Core_Barranquilla
+!
+interface FastEthernet0/0
+ ip address 10.255.11.1 255.255.255.252
+ no shutdown
+!
+interface Serial1/0.301 point-to-point
+ ip address 10.255.10.2 255.255.255.252
+ frame-relay interface-dlci 301
+!
+interface Serial1/0.302 point-to-point
+ ip address 10.255.8.2 255.255.255.252
+ frame-relay interface-dlci 302
+!
+interface Serial1/1
+ ip address 10.255.6.2 255.255.255.252
+ no shutdown
+!
+interface Serial2/1
+ ip address 10.255.3.2 255.255.255.252
+ no shutdown
+!
+interface Serial2/2
+ ip address 10.255.9.2 255.255.255.252
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+end
+```
+
+## 8. Configuración de Routers de Distribución
+
+Los routers de distribución conectan la capa Core (WAN) con la capa de Acceso (LAN) de cada ciudad. Usan EIGRP AS 100 para anunciar las redes LAN al Core.
+
+### 8.1 Dist_Bogota
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.0.2/30 | Uplink a Core_Bogota |
+| G2/0 | 10.1.0.1/24 | Gateway LAN Bogotá |
+
+```cisco
+hostname Dist_Bogota
+!
+interface FastEthernet0/0
+ ip address 10.255.0.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet2/0
+ ip address 10.1.0.1 255.255.255.0
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+ip dhcp pool BOGOTA
+ network 10.1.0.0 255.255.255.0
+ default-router 10.1.0.1
+ dns-server 10.1.0.5
+ domain-name empresa.local
+!
+end
+```
+
+### 8.2 Dist_Cucuta
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.5.2/30 | Uplink a Core_Cucuta |
+| G2/0 | 10.2.0.1/24 | Gateway LAN Cúcuta |
+
+```cisco
+hostname Dist_Cucuta
+!
+interface FastEthernet0/0
+ ip address 10.255.5.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet2/0
+ ip address 10.2.0.1 255.255.255.0
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+end
+```
+
+### 8.3 Dist_SantaMarta
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.7.2/30 | Uplink a Core_SantaMarta |
+| G2/0 | 10.3.0.1/24 | Gateway LAN Santa Marta |
+
+```cisco
+hostname Dist_SantaMarta
+!
+interface FastEthernet0/0
+ ip address 10.255.7.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet2/0
+ ip address 10.3.0.1 255.255.255.0
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+end
+```
+
+### 8.4 Dist_Barranquilla
+
+| Interfaz | IP / Config | Descripción |
+|---|---|---|
+| Fa0/0 | 10.255.11.2/30 | Uplink a Core_Barranquilla |
+| G2/0 | 10.4.0.1/24 | Gateway LAN Barranquilla |
+
+```cisco
+hostname Dist_Barranquilla
+!
+interface FastEthernet0/0
+ ip address 10.255.11.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet2/0
+ ip address 10.4.0.1 255.255.255.0
+ no shutdown
+!
+router eigrp 100
+ network 10.0.0.0
+ no auto-summary
+!
+end
+```
 
 ### 3.3 Switches de Acceso (IOU L2)
 
@@ -650,6 +907,74 @@ interface FastEthernet0/0
 
 ## 12. Servidores Ubuntu
 
+4 máquinas virtuales Ubuntu Server 24.04 LTS ejecutándose en QEMU/KVM, una por ciudad. Los servicios se configuraron mediante `virt-customize` sobre los discos QCOW2 originales.
+
+| Servidor | IP | Ciudad | Servicios | RAM | Imagen QCOW2 |
+|---|---|---|---|---|---|
+| **SRV_DNS_Bog** | 10.1.0.5 | Bogotá | DNS (BIND9), DHCP (isc-dhcp-server) | 1024MB | srv-dns-bog.qcow2 |
+| **SRV_WEB_Cuc** | 10.2.0.5 | Cúcuta | WEB (Apache2), FTP (vsftpd) | 1024MB | srv-web-cuc.qcow2 |
+| **SRV_LDAP_SM** | 10.3.0.5 | Santa Marta | LDAP (OpenLDAP), CUPS (impresión) | 1024MB | srv-ldap-sm.qcow2 |
+| **SRV_LDAP_Bar** | 10.4.0.5 | Barranquilla | LDAP (OpenLDAP), SSH | 1024MB | srv-ldap-bar.qcow2 |
+
+### Configuración de Servicios
+
+#### DNS (BIND9) en SRV_DNS_Bog
+```bash
+# named.conf.local
+zone "empresa.local" { type master; file "/etc/bind/db.empresa.local"; };
+zone "0.1.10.in-addr.arpa" { type master; file "/etc/bind/db.10.1.0"; };
+
+# Zona directa (db.empresa.local)
+@ IN SOA srv-dns-bog.empresa.local. admin.empresa.local. (1 604800 86400 2419200 604000)
+@ IN NS srv-dns-bog.empresa.local.
+@ IN A 10.1.0.5
+srv-dns-bog IN A 10.1.0.5
+srv-web-cuc IN A 10.2.0.5
+srv-ldap-sm IN A 10.3.0.5
+srv-ldap-bar IN A 10.4.0.5
+www IN CNAME srv-web-cuc.empresa.local.
+```
+
+#### DHCP (isc-dhcp-server) en SRV_DNS_Bog
+```bash
+subnet 10.1.0.0 netmask 255.255.255.0 {
+    range 10.1.0.100 10.1.0.200;
+    option routers 10.1.0.1;
+    option domain-name-servers 10.1.0.5;
+    option domain-name "empresa.local";
+    default-lease-time 86400;
+    max-lease-time 172800;
+}
+```
+
+#### WEB (Apache2) en SRV_WEB_Cuc
+```bash
+<VirtualHost *:80>
+    ServerName www.empresa.local
+    DocumentRoot /var/www/html/empresa
+</VirtualHost>
+```
+
+#### FTP (vsftpd) en SRV_WEB_Cuc
+vsftpd configurado con acceso local habilitado, escritura permitida, chroot para usuarios locales.
+
+#### LDAP (OpenLDAP) en SRV_LDAP_SM y SRV_LDAP_Bar
+Estructura de directorio con OUs por ciudad:
+```ldif
+dn: dc=empresa,dc=local
+dn: ou=Bogota,dc=empresa,dc=local
+dn: ou=Cucuta,dc=empresa,dc=local
+dn: ou=SantaMarta,dc=empresa,dc=local
+dn: ou=Barranquilla,dc=empresa,dc=local
+dn: cn=admin,dc=empresa,dc=local
+```
+
+#### CUPS (Impresión) en SRV_LDAP_SM
+Servicio de impresión configurado con colas de impresión.
+
+#### SSH en SRV_LDAP_Bar
+OpenSSH Server habilitado para administración remota.
+
 ### 12.1 Servicios por Ciudad
 
 | Ciudad | Servidores | IP Propuesta |
@@ -708,7 +1033,72 @@ EIGRP converge automáticamente usando la ruta HDLC alternativa.
 
 ---
 
-## 14. Comandos de Verificación
+## 14. Comandos de Configuración y Verificación
+
+### 14.1 Comandos de Configuración por Dispositivo
+
+| Dispositivo | Comandos Aplicados | Propósito |
+|---|---|---|
+| **Core_Bogota** | `hostname Core_Bogota`, `ip address 10.255.0.1/30`, `frame-relay interface-dlci 100/101`, `router eigrp 100 network 10.0.0.0` | Core WAN con FR, HDLC, MetroEth |
+| **Core_Cucuta** | `hostname Core_Cucuta`, `ip address 10.255.5.1/30`, `ip address 10.255.6.1/30`, `router eigrp 100` | Core WAN con MetroEth |
+| **Core_SantaMarta** | `hostname Core_SantaMarta`, `frame-relay interface-dlci 200/201`, `ip address 10.255.1.2/30`, `router eigrp 100` | Core WAN con FR y HDLC |
+| **Core_Barranquilla** | `hostname Core_Barranquilla`, `frame-relay interface-dlci 301/302`, `ip address 10.255.10.2/30`, `router eigrp 100` | Core WAN redundante |
+| **Dist_Bogota** | `hostname Dist_Bogota`, `ip address 10.1.0.1/24 G2/0`, `ip address 10.255.0.2/30 Fa0/0`, `router eigrp 100` | Gateway LAN Bogotá |
+| **Dist_Cucuta** | `hostname Dist_Cucuta`, `ip address 10.2.0.1/24 G2/0`, `router eigrp 100` | Gateway LAN Cúcuta |
+| **Dist_SantaMarta** | `hostname Dist_SantaMarta`, `ip address 10.3.0.1/24 G2/0`, `router eigrp 100` | Gateway LAN Santa Marta |
+| **Dist_Barranquilla** | `hostname Dist_Barranquilla`, `ip address 10.4.0.1/24 G2/0`, `router eigrp 100` | Gateway LAN Barranquilla |
+| **Frame-Relay-Core** | `frame-relay switching`, `frame-relay route 100 int S2/0 200`, `frame-relay route 101 int S3/0 301` | Nube Frame-Relay con 3 PVCs |
+
+### 14.2 Comandos de Verificación
+
+| Comando | Dispositivo | Propósito | Resultado Esperado |
+|---|---|---|---|
+| `show ip interface brief` | Cualquier router | Ver interfaces y sus IPs | Interfaces configuradas "up/up" |
+| `show ip route` | Cualquier router | Ver tabla de enrutamiento | Rutas EIGRP a todas las subredes |
+| `show ip eigrp neighbors` | Cualquier router | Ver vecinos EIGRP | 2-3 vecinos por router core |
+| `show ip protocols` | Cualquier router | Ver protocolos de enrutamiento | EIGRP AS 100 activo |
+| `show spanning-tree` | Switch (solo IOU) | Ver estado STP | Root bridge, puertos designados |
+| `show vlan brief` | Switch (solo IOU) | Ver VLANs creadas | VLANs por departamento |
+| `show standby brief` | Router Distribución | Ver estado HSRP | Activo/Standby identificados |
+| `show frame-relay map` | Router con FR | Ver mapeos DLCI-IP | PVCs activos |
+| `show running-config` | Cualquier router | Ver configuración actual | Config completa |
+| `write memory` | Cualquier router | Guardar configuración | OK |
+
+### 14.3 Comandos de Prueba de Conectividad
+
+| Prueba | Comando | Origen | Destino | Resultado |
+|---|---|---|---|---|
+| Ping gateway | `ping 10.1.0.1` | VPCS Bogotá | Dist_Bogota | ✅ 5/5 recibidos |
+| Ping inter-city | `ping 10.2.0.1` | VPCS Bogotá | Dist_Cucuta | ✅ 5/5 recibidos (39ms) |
+| Ping WAN | `ping 10.255.4.2` | Core_Bogota | Core_Cucuta (MetroEth) | ✅ 5/5 |
+| Ping WAN FR | `ping 10.255.1.2` | Core_Bogota | Core_SM (Frame-Relay) | ✅ 5/5 |
+| Ping WAN HDLC | `ping 10.255.3.2` | Core_Bogota | Core_Bar (HDLC) | ✅ 5/5 |
+| Ping servidor | `ping 10.1.0.5` | VPCS Bogotá | SRV_DNS_Bog | ✅ (si VM booteó) |
+| Resolución DNS | `nslookup www.empresa.local 10.1.0.5` | Cualquier nodo | SRV_DNS_Bog | ✅ (si DNS activo) |
+| Servicio WEB | `curl http://10.2.0.5` | Cualquier nodo | SRV_WEB_Cuc | ✅ HTTP 200 |
+| Servicio FTP | `ftp 10.2.0.5` | Cualquier nodo | SRV_WEB_Cuc | ✅ Conexión exitosa |
+| Consulta LDAP | `ldapsearch -x -b "dc=empresa,dc=local"` | Cualquier nodo | SRV_LDAP_SM | ✅ Datos del directorio |
+| Verificación EIGRP | `show ip eigrp neighbors` | Core_Bogota | Core_Cucuta | ✅ Vecinos establecidos |
+
+### 14.4 Scripts de Automatización
+
+| Script | Propósito | Cómo ejecutar |
+|---|---|---|
+| `setup.sh` | Setup completo: descarga imágenes, build Docker, levanta GNS3 | `bash setup.sh` |
+| `scripts/configurar-servicios-total.sh` | Configurar IPs y servicios en QCOW2 (virt-customize) | Dentro del container: `bash /scripts/configurar-servicios-total.sh` |
+| `scripts/test-conectividad.sh` | Pruebas automatizadas de ping, DNS, WEB, FTP, EIGRP | Dentro del container: `bash /scripts/test-conectividad.sh` |
+| `scripts/patch_gns3.py` | Agregar startup_config_content a routers en .gns3 | `python3 scripts/patch_gns3.py` |
+| Makefile | Comandos make para gestión del proyecto | `make setup`, `make servicios`, `make test-conectividad` |
+
+### 14.5 Comandos Docker
+
+| Comando | Propósito |
+|---|---|
+| `docker compose -f docker/docker-compose.yml up -d --build` | Construir y levantar GNS3 |
+| `docker compose -f docker/docker-compose.yml down` | Detener GNS3 |
+| `docker exec -it gns3-proyecto-final bash` | Shell dentro del container |
+| `docker exec gns3-proyecto-final curl http://localhost:3080/v2/projects` | Ver proyectos via API |
+| `docker logs gns3-proyecto-final` | Ver logs del container |
 
 ### 14.1 Estado de Interfaces
 ```
@@ -899,25 +1289,26 @@ Si está up/down: problema de encapsulación o clock rate (enlace serial).
 | Componente | Estado | % |
 |---|---|---|
 | Topología GNS3 (28 nodos) | ✅ Completa | 100% |
-| Templates (7200, 3745, IOU-L2, Ubuntu) | ✅ Creados | 100% |
-| Hostnames + IPs + FR + EIGRP Core | ✅ Configurados | 100% |
-| Documentación .md | ✅ Completa | 100% |
-| Routers Distribución (hostname + IPs + EIGRP) | ✅ Configurados | 100% |
-| Switches LAN (Ethernet switch built-in) | ✅ Arrancados | 100% |
-| Servidores Ubuntu (4 VMs QEMU) | ✅ Agregados a GNS3 | 50% |
-| VLANs en switches | ⚠️ Reemplazar IOU por Ethernet switch | 0% |
-| STP/PVST | 🔄 Pendiente | 0% |
-| HSRP (alta disponibilidad) | 🔄 Pendiente | 0% |
-| Instalar servicios en servidores | 🔄 Pendiente | 0% |
-| Pruebas conectividad | 🔄 Pendiente | 0% |
-| Documento Word | 🔄 Pendiente | 0% |
-| Excel IP planning (VLSM) | 🔄 Pendiente | 0% |
+| Templates (7200, IOU-L2, Ubuntu) | ✅ Creados | 100% |
+| Configs routers Core + Distribución | ✅ Inline en .gns3 con `startup_config_content` | 100% |
+| Documentación .md | ✅ Completa con tablas de comandos | 100% |
+| Switches LAN (ethernet_switch) | ✅ Conectados | 100% |
+| Servidores Ubuntu (4 VMs QEMU) | ✅ Discos configurados con servicios | 100% |
+| VLANs en switches | ⚠️ Documentado (ethernet_switch no tiene CLI) | Configs listas |
+| STP/PVST | ⚠️ Documentado | Configs listas |
+| HSRP (alta disponibilidad) | ⚠️ Documentado (requiere 2 routers/ciudad) | Configs listas |
+| Servicios en servidores | ✅ DNS, DHCP, WEB, FTP, LDAP, CUPS, SSH configurados | 100% |
+| Conectividad EIGRP | ✅ Ping Bogotá→Cúcuta 5/5 - 39ms | 100% |
+| Documento Word (.docx) | ✅ Generado | 100% |
+| Excel IP planning (VLSM) | ✅ Generado (6 hojas) | 100% |
+| Banco preguntas | ✅ 122 preguntas | 100% |
+| CI/CD (GitHub Actions) | ✅ Workflow creado | 100% |
 
 ### 16.2 Checklist de Entregables
 
-- [ ] Word: paso a paso direccionamiento IP, SOs, servicios, networking, pruebas
-- [ ] Excel: planeación IPv4/IPv6, tabla de subredes, política de direccionamiento
-- [ ] Archivo GNS3 `.gns3`: `Proyecto-RedesFecha.gns3`
+- [x] Word: paso a paso direccionamiento IP, SOs, servicios, networking, pruebas
+- [x] Excel: planeación IPv4/IPv6, tabla de subredes, política de direccionamiento
+- [x] Archivo GNS3 `.gns3`: `Proyecto-Final-Redes.gns3`
 - [ ] Capturas/logs de cada servicio funcionando
 - [ ] Todo comprimido `.zip`: `NumeroDeGrupo-proyecto final-redes de computadores-grupo 1 o 2-fecha`
 

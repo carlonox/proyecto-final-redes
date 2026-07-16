@@ -643,6 +643,93 @@ Varias sesiones intensivas con el asistente IA via MCP. La topologia se construy
 
 ---
 
+## SECCION 12: PLANEACION IP Y VLSM (ampliacion)
+
+**P106: ¿Como calcularon el VLSM para las 4 ciudades?**
+Ordenamos los segmentos por cantidad de hosts (con crecimiento 10%), de mayor a menor:
+1. Santa Marta (74,030 futuros) → /15 → 10.0.0.0/15
+2. Bogota (32,780 futuros) → /16 → 10.2.0.0/16
+3. Cucuta (60,500 futuros) → /16 → 10.3.0.0/16
+4. Barranquilla (30,140 futuros) → /17 → 10.4.0.0/17
+
+**P107: ¿Por que usaron clase A privada (10.0.0.0/8)?**
+Porque con ~180,000 hosts totales entre las 4 ciudades, un bloque clase B (172.16.0.0/12, ~1M hosts) o clase C (192.168.0.0/16, ~65K hosts) no seria suficiente para el crecimiento proyectado con el 10% LAN.
+
+**P108: ¿Como planificaron NAT?**
+Usamos NAT Overload (PAT) con un pool publico de 14 IPs (200.10.10.0/28). Toda la red privada 10.0.0.0/8 se traduce a ese pool mediante puertos efimeros. Justificacion: ~180,000 hosts internos y solo 14 IPs publicas requiere PAT para que todos compartan el pool.
+
+**P109: ¿Que politicas de asignacion IP definieron?**
+- Estatica: routers (todas las interfaces), servidores (.5 en cada subred), enlaces WAN (/30)
+- Dinamica (DHCP): estaciones de trabajo en rango .100 - .200 de cada ciudad
+- Excluidas: .1 - .10 (gateways, servidores, reservadas)
+
+**P110: ¿Como planificaron IPv6?**
+Usamos el bloque de documentacion 2001:db8:1::/48. Cada ciudad tiene un /64 (2001:db8:1:1::/64 Bogota, :2::/64 Cucuta, etc.). Los enlaces WAN usan 2001:db8:1:ff::/64. Asignacion: SLAAC + DHCPv6 stateless para estaciones, estatica para servidores y routers.
+
+---
+
+## SECCION 13: SERVICIOS EN SERVIDORES
+
+**P111: ¿Que servicios instalaron en SRV_DNS_Bog?**
+DNS (BIND9) con zonas directa (empresa.local) e inversa (0.1.10.in-addr.arpa), y DHCP (isc-dhcp-server) con rango 10.1.0.100-200.
+
+**P112: ¿Que registros DNS configuraron?**
+- srv-dns-bog.empresa.local → 10.1.0.5
+- srv-web-cuc.empresa.local → 10.2.0.5
+- srv-ldap-sm.empresa.local → 10.3.0.5
+- srv-ldap-bar.empresa.local → 10.4.0.5
+- www.empresa.local → CNAME a srv-web-cuc
+
+**P113: ¿Que servicios tiene SRV_WEB_Cuc?**
+Apache2 (servicio WEB) con VirtualHost www.empresa.local, y vsftpd (servicio FTP) con acceso local, escritura habilitada y chroot.
+
+**P114: ¿Que servicios tienen SRV_LDAP_SM y SRV_LDAP_Bar?**
+SRV_LDAP_SM: OpenLDAP con OUs por ciudad (Bogota, Cucuta, SantaMarta, Barranquilla) y CUPS (impresion).
+SRV_LDAP_Bar: OpenLDAP y SSH.
+
+**P115: ¿Como configuraron la autenticacion LDAP?**
+OpenLDAP con estructura dc=empresa,dc=local. OUs por ciudad. En clientes Linux se usa sssd/nslcd + PAM para autenticar contra el LDAP. Prueba: ldapsearch -x -b "dc=empresa,dc=local".
+
+**P116: ¿Como probaron cada servicio?**
+Protocolo de pruebas por servicio:
+1. systemctl status (disponibilidad)
+2. ping al servidor (conectividad)
+3. Comando especifico (dig, curl, ftp, ldapsearch)
+4. Prueba de integracion entre servicios
+5. Captura de pantalla y logs
+
+---
+
+## SECCION 14: STP y HSRP
+
+**P117: ¿Que protocolo STP usaron y por que?**
+PVST+ (Per-VLAN Spanning Tree Plus). Es el protocolo nativo de Cisco que ejecuta una instancia de STP por cada VLAN, permitiendo balanceo de carga y optimizacion por VLAN. Elegimos PVST+ sobre RSTP porque es compatible con los switches IOU L2 y permite control granular por VLAN.
+
+**P118: ¿Como definieron el Root Bridge?**
+Asignamos manualmente prioridad 4096 al switch de distribucion de cada ciudad (la prioridad por defecto es 32768). El switch con menor prioridad es elegido root. Para verificar: show spanning-tree root.
+
+**P119: ¿Que es HSRP y como lo configuraron?**
+HSRP (Hot Standby Router Protocol) permite que dos routers compartan una IP virtual como gateway. El router activo (prioridad mayor) reenvia trafico; si falla, el standby toma el control. Configuramos con standby priority 110 (activo), standby preempt y standby version 2.
+
+**P120: ¿Como probaron la alta disponibilidad HSRP?**
+Desconectando el router activo y verificando con show standby brief que el standby toma el rol de activo. El ping desde un cliente no debe perder mas de 1-2 paquetes durante la transicion.
+
+---
+
+## SECCION 15: DOCUMENTACION Y ENTREGABLES
+
+**P121: ¿Que documentos entregaron?**
+1. Documento Word (.docx) con: paso a paso IP, SOs instalados, servicios, config networking, protocolo de pruebas, resultados.
+2. Excel (.xlsx) con: portada, VLSM, tabla de subredes IPv4, asignacion por dispositivo, politica NAT, IPv6.
+3. Archivo GNS3 (.gns3) con la topologia completa.
+4. Scripts de automatizacion de servicios.
+5. Capturas de pruebas.
+
+**P122: ¿Como se nombra el ZIP final?**
+NumeroDeGrupo-proyecto final-redes de computadores-grupo 1 o 2-fecha.zip
+
+---
+
 *Banco de preguntas preparado para sustentacion del Proyecto Final de Redes de Computadores 2025967*
 *Universidad Nacional de Colombia - Facultad de Ingenieria - Julio 2026*
-*105 preguntas cubriendo: Setup GNS3, Topologia, VLSM, WAN, EIGRP, Config routers, Linux, Servicios, Verificacion, Seguridad, Frame-Relay detallado, EIGRP detallado, VLANs, HSRP, y preguntas generales*
+*122 preguntas cubriendo: Setup GNS3, Topologia, VLSM, WAN, EIGRP, Config routers, Linux, Servicios, Verificacion, Seguridad, Frame-Relay detallado, EIGRP detallado, VLANs, HSRP, Planeacion IP, Servidores, STP, HSRP, y entregables*
