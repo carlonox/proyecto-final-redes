@@ -1,0 +1,115 @@
+version: '3.9'
+
+services:
+  gns3-server:
+    image: gns3/gns3-server:latest
+    container_name: gns3-proyecto-final
+    hostname: gns3-server
+    restart: unless-stopped
+    
+    # === HARDWARE PASSTHROUGH (WSL2 compatible) ===
+    privileged: true
+    network_mode: "host"
+    pid: "host"
+    ipc: "host"
+    userns_mode: "host"
+    
+    devices:
+      - "/dev/kvm:/dev/kvm"         # KVM acceleration para QEMU
+      - "/dev/net/tun:/dev/net/tun" # TUN/TAP para ubridge
+      - "/dev/vhost-net:/dev/vhost-net"  # vhost-net acceleration
+      
+    cap_add:
+      - NET_ADMIN      # Gestión de interfaces de red
+      - NET_RAW        # Sockets raw
+      - SYS_ADMIN      # Operaciones administrativas del sistema
+      - SYS_RAWIO      # E/S de bajo nivel
+      - SYS_NICE       # Ajuste de prioridad de procesos
+      - SYS_PTRACE     # Traza de procesos
+      - DAC_OVERRIDE   # Omitir comprobaciones de permisos
+      - ALL            # Todos los privilegios (equivalente a --privileged)
+      
+    volumes:
+      # === DATOS DEL PROYECTO ===
+      - ../imagenes:/data/imagenes:ro           # Imágenes IOS/IOU/QEMU (solo lectura)
+      - ../Proyecto-Final-Redes.gns3:/data/proyecto.gns3:ro  # Topología
+      
+      # === CONFIGURACION GNS3 ===
+      - ../config/gns3_server.conf:/etc/gns3/gns3_server.conf:ro
+      - ../config/gns3_controller.conf:/etc/gns3/gns3_controller.conf:ro
+      
+      # === PERSISTENCIA (se crean en tiempo de ejecución) ===
+      - gns3-projects:/data/projects          # Proyectos GNS3
+      - gns3-configs:/data/configs             # Configuraciones
+      - gns3-logs:/var/log/gns3                # Logs
+      
+      # === STORAGE DE IMÁGENES (bind mount para acceso directo) ===
+      - ../imagenes/IOS:/data/imagenes/IOS:ro
+      - ../imagenes/IOU:/data/imagenes/IOU:ro
+      - ../imagenes/QEMU:/data/imagenes/QEMU:ro
+      
+      # === ACCESO A DISPOSITIVOS DEL SISTEMA ===
+      - /lib/modules:/lib/modules:ro
+      - /usr/src:/usr/src:ro
+      
+    environment:
+      # === GNS3 SERVER ===
+      - GNS3_SERVER_PORT=3080
+      - GNS3_SERVER_HOST=0.0.0.0
+      - GNS3_IMAGES_PATH=/data/imagenes
+      - GNS3_PROJECTS_PATH=/data/projects
+      - GNS3_CONFIGS_PATH=/data/configs
+      
+      # === IOU LICENSE ===
+      - GNS3_IOU_LICENSE_CHECK=false
+      
+      # === QEMU/KVM ===
+      - QEMU_AUDIO_DRV=none
+      - DISPLAY=:0
+      
+      # === DYNAMIPS ===
+      - DYNAMIPS_MMAP=true
+      - DYNAMIPS_SPARSE=true
+      
+    # === HEALTHCHECK ===
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3080/v2/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      
+    # === RECURSOS ===
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
+          
+    # === LOGGING ===
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+volumes:
+  gns3-projects:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../projects
+      o: bind
+  gns3-configs:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../configs
+      o: bind
+  gns3-logs:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../logs
+      o: bind

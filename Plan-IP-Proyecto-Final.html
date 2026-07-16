@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Plan IP - Proyecto Final Redes 2026-1</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+h1, h2, h3 { color: #003366; }
+table { border-collapse: collapse; width: 100%; margin: 15px 0; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+th { background: #003366; color: white; padding: 10px 8px; text-align: left; font-size: 13px; }
+td { padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 12px; }
+tr:nth-child(even) { background: #f9f9f9; }
+tr:hover { background: #e8f0fe; }
+.section { background: #e8f0fe; font-weight: bold; color: #003366; }
+.header { background: #001a33; color: white; text-align: center; padding: 20px; margin-bottom: 20px; border-radius: 5px; }
+.info { background: #fff3cd; padding: 10px; border-left: 4px solid #ffc107; margin: 10px 0; }
+.ipv6 { background: #e8f5e9; }
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>PLANEACION Y ASIGNACION DE DIRECCIONAMIENTO IP</h1>
+<p>Proyecto Final - Redes de Computadores 2025967 | Grupo [Numero] | 14 Julio 2026</p>
+</div>
+
+<div class="info">
+<strong>Informacion General:</strong><br>
+Red Base: 10.0.0.0/8 (Clase A Privada) | Crecimiento LAN: 10% | Crecimiento WAN: 3%<br>
+Profesor: Jesus Guillermo Tovar Rache | Monitor: Cristian Camilo Garcia Palacios
+</div>
+
+<h2>1. ENLACES WAN CORE (/30)</h2>
+<table>
+<tr><th>Enlace</th><th>Tecnologia</th><th>Subred</th><th>Nodo A</th><th>IP A</th><th>Nodo B</th><th>IP B</th></tr>
+<tr><td>Bogota - Cucuta</td><td>Metro-Ethernet</td><td>10.255.4.0/30</td><td>Core_Bogota G3/0</td><td>10.255.4.1</td><td>Core_Cucuta G3/0</td><td>10.255.4.2</td></tr>
+<tr><td>Bogota - Santa Marta</td><td>Frame-Relay (DLCI 100/200)</td><td>10.255.1.0/30</td><td>Core_Bogota S1/0.100</td><td>10.255.1.1</td><td>Core_SM S1/0.200</td><td>10.255.1.2</td></tr>
+<tr><td>Bogota - Barranquilla</td><td>Frame-Relay (DLCI 101/301)</td><td>10.255.10.0/30</td><td>Core_Bogota S1/0.101</td><td>10.255.10.1</td><td>Core_Bar S1/0.301</td><td>10.255.10.2</td></tr>
+<tr><td>SM - Barranquilla</td><td>Frame-Relay (DLCI 201/302)</td><td>10.255.8.0/30</td><td>Core_SM S1/0.201</td><td>10.255.8.1</td><td>Core_Bar S1/0.302</td><td>10.255.8.2</td></tr>
+<tr><td>Bogota - Santa Marta</td><td>HDLC (Redundante)</td><td>10.255.2.0/30</td><td>Core_Bogota S2/0</td><td>10.255.2.1</td><td>Core_SM S2/0</td><td>10.255.2.2</td></tr>
+<tr><td>Bogota - Barranquilla</td><td>HDLC (Redundante)</td><td>10.255.3.0/30</td><td>Core_Bogota S2/1</td><td>10.255.3.1</td><td>Core_Bar S2/1</td><td>10.255.3.2</td></tr>
+<tr><td>SM - Barranquilla</td><td>HDLC (Redundante)</td><td>10.255.9.0/30</td><td>Core_SM S2/1</td><td>10.255.9.1</td><td>Core_Bar S2/2</td><td>10.255.9.2</td></tr>
+<tr><td>Cucuta - Barranquilla</td><td>Metro-Ethernet</td><td>10.255.6.0/30</td><td>Core_Cucuta S1/0</td><td>10.255.6.1</td><td>Core_Bar S1/1</td><td>10.255.6.2</td></tr>
+</table>
+
+<h2>2. ENLACES CORE A DISTRIBUCION (/30)</h2>
+<table>
+<tr><th>Ciudad</th><th>Subred</th><th>Router Core</th><th>IP Core</th><th>Router Dist</th><th>IP Dist</th></tr>
+<tr><td>Bogota</td><td>10.255.0.0/30</td><td>Core_Bogota Fa0/0</td><td>10.255.0.1</td><td>Dist_Bogota Fa0/0</td><td>10.255.0.2</td></tr>
+<tr><td>Cucuta</td><td>10.255.5.0/30</td><td>Core_Cucuta Fa0/0</td><td>10.255.5.1</td><td>Dist_Cucuta Fa0/0</td><td>10.255.5.2</td></tr>
+<tr><td>Santa Marta</td><td>10.255.7.0/30</td><td>Core_SM Fa0/0</td><td>10.255.7.1</td><td>Dist_SM Fa0/0</td><td>10.255.7.2</td></tr>
+<tr><td>Barranquilla</td><td>10.255.11.0/30</td><td>Core_Bar Fa0/0</td><td>10.255.11.1</td><td>Dist_Bar Fa0/0</td><td>10.255.11.2</td></tr>
+</table>
+
+<h2>3. REDES LAN POR CIUDAD (/24)</h2>
+<table>
+<tr><th>Ciudad</th><th>Subred</th><th>Gateway</th><th>Mascara</th><th>Hosts</th><th>Asignacion</th><th>DNS</th></tr>
+<tr><td>Bogota</td><td>10.1.0.0/24</td><td>10.1.0.1</td><td>255.255.255.0</td><td>254</td><td>DHCP</td><td>8.8.8.8</td></tr>
+<tr><td>Cucuta</td><td>10.2.0.0/24</td><td>10.2.0.1</td><td>255.255.255.0</td><td>254</td><td>DHCP</td><td>8.8.8.8</td></tr>
+<tr><td>Santa Marta</td><td>10.3.0.0/24</td><td>10.3.0.1</td><td>255.255.255.0</td><td>254</td><td>DHCP</td><td>8.8.8.8</td></tr>
+<tr><td>Barranquilla</td><td>10.4.0.0/24</td><td>10.4.0.1</td><td>255.255.255.0</td><td>254</td><td>DHCP</td><td>8.8.8.8</td></tr>
+</table>
+
+<h2>4. ASIGNACION POR DISPOSITIVO</h2>
+
+<h3>4.1 Routers Core</h3>
+<table>
+<tr><th>Dispositivo</th><th>Interfaz</th><th>IP</th><th>Mascara</th><th>Descripcion</th></tr>
+<tr><td rowspan="6">Core_Bogota</td><td>Fa0/0</td><td>10.255.0.1</td><td>/30</td><td>Enlace a Dist_Bogota</td></tr>
+<tr><td>S1/0.100</td><td>10.255.1.1</td><td>/30</td><td>FR a Santa Marta (DLCI 100)</td></tr>
+<tr><td>S1/0.101</td><td>10.255.10.1</td><td>/30</td><td>FR a Barranquilla (DLCI 101)</td></tr>
+<tr><td>S2/0</td><td>10.255.2.1</td><td>/30</td><td>HDLC a Santa Marta</td></tr>
+<tr><td>S2/1</td><td>10.255.3.1</td><td>/30</td><td>HDLC a Barranquilla</td></tr>
+<tr><td>G3/0</td><td>10.255.4.1</td><td>/30</td><td>Metro-Ethernet a Cucuta</td></tr>
+<tr><td rowspan="3">Core_Cucuta</td><td>Fa0/0</td><td>10.255.5.1</td><td>/30</td><td>Enlace a Dist_Cucuta</td></tr>
+<tr><td>S1/0</td><td>10.255.6.1</td><td>/30</td><td>Metro-Ethernet a Barranquilla</td></tr>
+<tr><td>G3/0</td><td>10.255.4.2</td><td>/30</td><td>Metro-Ethernet a Bogota</td></tr>
+<tr><td rowspan="5">Core_SantaMarta</td><td>Fa0/0</td><td>10.255.7.1</td><td>/30</td><td>Enlace a Dist_SM</td></tr>
+<tr><td>S1/0.200</td><td>10.255.1.2</td><td>/30</td><td>FR a Bogota (DLCI 200)</td></tr>
+<tr><td>S1/0.201</td><td>10.255.8.1</td><td>/30</td><td>FR a Barranquilla (DLCI 201)</td></tr>
+<tr><td>S2/0</td><td>10.255.2.2</td><td>/30</td><td>HDLC a Bogota</td></tr>
+<tr><td>S2/1</td><td>10.255.9.1</td><td>/30</td><td>HDLC a Barranquilla</td></tr>
+<tr><td rowspan="5">Core_Barranquilla</td><td>Fa0/0</td><td>10.255.11.1</td><td>/30</td><td>Enlace a Dist_Bar</td></tr>
+<tr><td>S1/0.301</td><td>10.255.10.2</td><td>/30</td><td>FR a Bogota (DLCI 301)</td></tr>
+<tr><td>S1/0.302</td><td>10.255.8.2</td><td>/30</td><td>FR a SM (DLCI 302)</td></tr>
+<tr><td>S1/1</td><td>10.255.6.2</td><td>/30</td><td>Metro-Ethernet a Cucuta</td></tr>
+<tr><td>S2/1</td><td>10.255.3.2</td><td>/30</td><td>HDLC a Bogota</td></tr>
+<tr><td>S2/2</td><td>10.255.9.2</td><td>/30</td><td>HDLC a SM</td></tr>
+</table>
+
+<h3>4.2 Routers Distribucion</h3>
+<table>
+<tr><th>Dispositivo</th><th>Interfaz</th><th>IP</th><th>Gateway</th><th>Descripcion</th></tr>
+<tr><td rowspan="2">Dist_Bogota</td><td>Fa0/0</td><td>10.255.0.2/30</td><td>10.255.0.1</td><td>Enlace a Core_Bogota</td></tr>
+<tr><td>G2/0</td><td>10.1.0.1/24</td><td>-</td><td>Gateway LAN Bogota</td></tr>
+<tr><td rowspan="2">Dist_Cucuta</td><td>Fa0/0</td><td>10.255.5.2/30</td><td>10.255.5.1</td><td>Enlace a Core_Cucuta</td></tr>
+<tr><td>G2/0</td><td>10.2.0.1/24</td><td>-</td><td>Gateway LAN Cucuta</td></tr>
+<tr><td rowspan="2">Dist_SantaMarta</td><td>Fa0/0</td><td>10.255.7.2/30</td><td>10.255.7.1</td><td>Enlace a Core_SM</td></tr>
+<tr><td>G2/0</td><td>10.3.0.1/24</td><td>-</td><td>Gateway LAN SM</td></tr>
+<tr><td rowspan="2">Dist_Barranquilla</td><td>Fa0/0</td><td>10.255.11.2/30</td><td>10.255.11.1</td><td>Enlace a Core_Bar</td></tr>
+<tr><td>G2/0</td><td>10.4.0.1/24</td><td>-</td><td>Gateway LAN Bar</td></tr>
+</table>
+
+<h3>4.3 Estaciones de Trabajo (VPCS)</h3>
+<table>
+<tr><th>Dispositivo</th><th>Ciudad</th><th>Depto</th><th>IP</th><th>Gateway</th><th>DNS</th></tr>
+<tr><td>PC_Ing_Bog</td><td>Bogota</td><td>Ingenieria</td><td>10.1.0.10/24</td><td>10.1.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Tec_Bog</td><td>Bogota</td><td>Area Tecnica</td><td>10.1.0.11/24</td><td>10.1.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Int_Bog</td><td>Bogota</td><td>Internet por Demanda</td><td>10.1.0.12/24</td><td>10.1.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Int_Cuc</td><td>Cucuta</td><td>Internet por Demanda</td><td>10.2.0.10/24</td><td>10.2.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Tec_Cuc</td><td>Cucuta</td><td>Area Tecnica</td><td>10.2.0.11/24</td><td>10.2.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Mkt_Cuc</td><td>Cucuta</td><td>Marketing</td><td>10.2.0.12/24</td><td>10.2.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Mkt_SM</td><td>Santa Marta</td><td>Marketing</td><td>10.3.0.10/24</td><td>10.3.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Ing_SM</td><td>Santa Marta</td><td>Ingenieria</td><td>10.3.0.11/24</td><td>10.3.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_BA_SM</td><td>Santa Marta</td><td>Banda Ancha</td><td>10.3.0.12/24</td><td>10.3.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Man_Bar</td><td>Barranquilla</td><td>Mantenimiento</td><td>10.4.0.10/24</td><td>10.4.0.1</td><td>8.8.8.8</td></tr>
+<tr><td>PC_Fin_Bar</td><td>Barranquilla</td><td>Finanzas</td><td>10.4.0.11/24</td><td>10.4.0.1</td><td>8.8.8.8</td></tr>
+</table>
+
+<h2>5. PLAN IPv6</h2>
+<table>
+<tr><th>Segmento</th><th>Prefijo</th><th>Tipo</th></tr>
+<tr><td>Organizacion</td><td>2001:db8:1::/48</td><td>Documentacion / ULA</td></tr>
+<tr><td>Bogota LAN</td><td>2001:db8:1:1::/64</td><td>SLAAC + DHCPv6 stateless</td></tr>
+<tr><td>Cucuta LAN</td><td>2001:db8:1:2::/64</td><td>SLAAC + DHCPv6 stateless</td></tr>
+<tr><td>Santa Marta LAN</td><td>2001:db8:1:3::/64</td><td>SLAAC + DHCPv6 stateless</td></tr>
+<tr><td>Barranquilla LAN</td><td>2001:db8:1:4::/64</td><td>SLAAC + DHCPv6 stateless</td></tr>
+<tr><td>Enlaces WAN</td><td>2001:db8:1:ff::/64</td><td>Estatica</td></tr>
+</table>
+
+<h2>6. MATRIZ DE TECNOLOGIAS WAN</h2>
+<table>
+<tr><th>Tecnologia</th><th>Enlaces</th><th>Velocidad tipica</th><th>Encapsulacion</th></tr>
+<tr><td>Frame-Relay</td><td>Bogota-SM, Bogota-Bar, SM-Bar</td><td>Hasta 45 Mbps (T3)</td><td>frame-relay + subinterfaces DLCI</td></tr>
+<tr><td>Metro-Ethernet</td><td>Bogota-Cucuta, Cucuta-Bar</td><td>100 Mbps - 1 Gbps</td><td>Ethernet directa</td></tr>
+<tr><td>HDLC</td><td>Bogota-SM, Bogota-Bar, SM-Bar</td><td>Hasta 45 Mbps</td><td>HDLC (default Cisco)</td></tr>
+</table>
+
+<h2>7. PROTOCOLO DE ENRUTAMIENTO: EIGRP</h2>
+<table>
+<tr><th>Parametro</th><th>Valor</th></tr>
+<tr><td>Protocolo</td><td>EIGRP (Enhanced Interior Gateway Routing Protocol)</td></tr>
+<tr><td>AS Number</td><td>100</td></tr>
+<tr><td>Tipo</td><td>Vector-distancia avanzado (hibrido)</td></tr>
+<tr><td>AD Interna</td><td>90</td></tr>
+<tr><td>AD Externa</td><td>170</td></tr>
+<tr><td>Metrica</td><td>BW + Delay (por defecto)</td></tr>
+<tr><td>Red anunciada</td><td>10.0.0.0</td></tr>
+<tr><td>Auto-summary</td><td>Deshabilitado (no auto-summary)</td></tr>
+</table>
+
+<div class="info" style="margin-top:30px;">
+<strong>Nota:</strong> Este documento forma parte del Proyecto Final de Redes de Computadores 2025967.
+Universidad Nacional de Colombia - Facultad de Ingenieria - 14 Julio 2026
+</div>
+
+</body>
+</html>

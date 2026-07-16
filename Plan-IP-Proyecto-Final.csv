@@ -1,0 +1,81 @@
+Grupo, [Numero Grupo], Fecha, 14 Julio 2026
+Proyecto, Final - Redes de Computadores 2025967
+Profesor, Jesus Guillermo Tovar Rache
+Monitor, Cristian Camilo Garcia Palacios
+Tipo Red, Clase A Privada (10.0.0.0/8)
+Crecimiento LAN, 10%
+Crecimiento WAN, 3%
+
+,, TABLA DE SUBNETES - IPv4 ,,,
+Segmento,Subred,Primera IP,Ultima IP,Broadcast,Mascara,Hosts Utiles,Tipo Asignacion
+,, ENLACES WAN CORE (/30) ,,,
+MetroEth Bog-Cuc,10.255.4.0/30,10.255.4.1,10.255.4.2,10.255.4.3,255.255.255.252,2,Estatica
+FR Bog-SM,10.255.1.0/30,10.255.1.1,10.255.1.2,10.255.1.3,255.255.255.252,2,Estatica
+FR Bog-Bar,10.255.10.0/30,10.255.10.1,10.255.10.2,10.255.10.3,255.255.255.252,2,Estatica
+FR SM-Bar,10.255.8.0/30,10.255.8.1,10.255.8.2,10.255.8.3,255.255.255.252,2,Estatica
+HDLC Bog-SM,10.255.2.0/30,10.255.2.1,10.255.2.2,10.255.2.3,255.255.255.252,2,Estatica
+HDLC Bog-Bar,10.255.3.0/30,10.255.3.1,10.255.3.2,10.255.3.3,255.255.255.252,2,Estatica
+HDLC SM-Bar,10.255.9.0/30,10.255.9.1,10.255.9.2,10.255.9.3,255.255.255.252,2,Estatica
+MetroEth Cuc-Bar,10.255.6.0/30,10.255.6.1,10.255.6.2,10.255.6.3,255.255.255.252,2,Estatica
+,, ENLACES A DISTRIBUCION (/30) ,,,
+CoreBog-DistBog,10.255.0.0/30,10.255.0.1,10.255.0.2,10.255.0.3,255.255.255.252,2,Estatica
+CoreCuc-DistCuc,10.255.5.0/30,10.255.5.1,10.255.5.2,10.255.5.3,255.255.255.252,2,Estatica
+CoreSM-DistSM,10.255.7.0/30,10.255.7.1,10.255.7.2,10.255.7.3,255.255.255.252,2,Estatica
+CoreBar-DistBar,10.255.11.0/30,10.255.11.1,10.255.11.2,10.255.11.3,255.255.255.252,2,Estatica
+,, REDES LAN POR CIUDAD (/24) ,,,
+Bogota LAN,10.1.0.0/24,10.1.0.1,10.1.0.254,10.1.0.255,255.255.255.0,254,Dinamica (DHCP)
+Cucuta LAN,10.2.0.0/24,10.2.0.1,10.2.0.254,10.2.0.255,255.255.255.0,254,Dinamica (DHCP)
+Santa Marta LAN,10.3.0.0/24,10.3.0.1,10.3.0.254,10.3.0.255,255.255.255.0,254,Dinamica (DHCP)
+Barranquilla LAN,10.4.0.0/24,10.4.0.1,10.4.0.254,10.4.0.255,255.255.255.0,254,Dinamica (DHCP)
+,, ASIGNACION DE IPS POR DISPOSITIVO ,,,
+Dispositivo,Interfaz,IP,Mascara,Gateway,Descripcion
+,, ROUTERS CORE ,,,
+Core_Bogota,Fa0/0,10.255.0.1,255.255.255.252,-,Enlace a Dist_Bogota
+Core_Bogota,S1/0.100,10.255.1.1,255.255.255.252,-,FR a Santa Marta (DLCI 100)
+Core_Bogota,S1/0.101,10.255.10.1,255.255.255.252,-,FR a Barranquilla (DLCI 101)
+Core_Bogota,S2/0,10.255.2.1,255.255.255.252,-,HDLC a Santa Marta
+Core_Bogota,S2/1,10.255.3.1,255.255.255.252,-,HDLC a Barranquilla
+Core_Bogota,G3/0,10.255.4.1,255.255.255.252,-,Metro-Ethernet a Cucuta
+Core_Cucuta,Fa0/0,10.255.5.1,255.255.255.252,-,Enlace a Dist_Cucuta
+Core_Cucuta,S1/0,10.255.6.1,255.255.255.252,-,Metro-Ethernet a Barranquilla
+Core_Cucuta,G3/0,10.255.4.2,255.255.255.252,-,Metro-Ethernet a Bogota
+Core_SantaMarta,Fa0/0,10.255.7.1,255.255.255.252,-,Enlace a Dist_SM
+Core_SantaMarta,S1/0.200,10.255.1.2,255.255.255.252,-,FR a Bogota (DLCI 200)
+Core_SantaMarta,S1/0.201,10.255.8.1,255.255.255.252,-,FR a Barranquilla (DLCI 201)
+Core_SantaMarta,S2/0,10.255.2.2,255.255.255.252,-,HDLC a Bogota
+Core_SantaMarta,S2/1,10.255.9.1,255.255.255.252,-,HDLC a Barranquilla
+Core_Barranquilla,Fa0/0,10.255.11.1,255.255.255.252,-,Enlace a Dist_Bar
+Core_Barranquilla,S1/0.301,10.255.10.2,255.255.255.252,-,FR a Bogota (DLCI 301)
+Core_Barranquilla,S1/0.302,10.255.8.2,255.255.255.252,-,FR a SM (DLCI 302)
+Core_Barranquilla,S1/1,10.255.6.2,255.255.255.252,-,Metro-Ethernet a Cucuta
+Core_Barranquilla,S2/1,10.255.3.2,255.255.255.252,-,HDLC a Bogota
+Core_Barranquilla,S2/2,10.255.9.2,255.255.255.252,-,HDLC a SM
+,, ROUTERS DISTRIBUCION ,,,
+Dist_Bogota,Fa0/0,10.255.0.2,255.255.255.252,10.255.0.1,Enlace a Core_Bogota
+Dist_Bogota,G2/0,10.1.0.1,255.255.255.0,-,Gateway LAN Bogota
+Dist_Cucuta,Fa0/0,10.255.5.2,255.255.255.252,10.255.5.1,Enlace a Core_Cucuta
+Dist_Cucuta,G2/0,10.2.0.1,255.255.255.0,-,Gateway LAN Cucuta
+Dist_SantaMarta,Fa0/0,10.255.7.2,255.255.255.252,10.255.7.1,Enlace a Core_SM
+Dist_SantaMarta,G2/0,10.3.0.1,255.255.255.0,-,Gateway LAN SM
+Dist_Barranquilla,Fa0/0,10.255.11.2,255.255.255.252,10.255.11.1,Enlace a Core_Bar
+Dist_Barranquilla,G2/0,10.4.0.1,255.255.255.0,-,Gateway LAN Bar
+,, ESTACIONES DE TRABAJO (VPCS) ,,,
+PC_Ing_Bog,E0,10.1.0.10,255.255.255.0,10.1.0.1,Ingenieria Bogota
+PC_Tec_Bog,E0,10.1.0.11,255.255.255.0,10.1.0.1,Area Tecnica Bogota
+PC_Int_Bog,E0,10.1.0.12,255.255.255.0,10.1.0.1,Internet por Demanda Bogota
+PC_Int_Cuc,E0,10.2.0.10,255.255.255.0,10.2.0.1,Internet Cucuta
+PC_Tec_Cuc,E0,10.2.0.11,255.255.255.0,10.2.0.1,Area Tecnica Cucuta
+PC_Mkt_Cuc,E0,10.2.0.12,255.255.255.0,10.2.0.1,Marketing Cucuta
+PC_Mkt_SM,E0,10.3.0.10,255.255.255.0,10.3.0.1,Marketing SM
+PC_Ing_SM,E0,10.3.0.11,255.255.255.0,10.3.0.1,Ingenieria SM
+PC_BA_SM,E0,10.3.0.12,255.255.255.0,10.3.0.1,Banda Ancha SM
+PC_Man_Bar,E0,10.4.0.10,255.255.255.0,10.4.0.1,Mantenimiento Bar
+PC_Fin_Bar,E0,10.4.0.11,255.255.255.0,10.4.0.1,Finanzas Bar
+,, PLAN IPv6 (PROPUESTA) ,,,
+Segmento,Prefijo,Rango
+Global Org,2001:db8:1::/48,Documentacion
+Bogota LAN,2001:db8:1:1::/64,SLAAC + DHCPv6
+Cucuta LAN,2001:db8:1:2::/64,SLAAC + DHCPv6
+SM LAN,2001:db8:1:3::/64,SLAAC + DHCPv6
+Bar LAN,2001:db8:1:4::/64,SLAAC + DHCPv6
+WAN Links,2001:db8:1:ff::/64,Estatica
