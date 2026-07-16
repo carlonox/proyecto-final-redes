@@ -1,9 +1,13 @@
 #!/bin/bash
-# Configurar servicios en servidores - Proyecto Final Redes
+# Configurar servidores - Proyecto Final Redes
+# Uso: DISK_PATH=/data/imagenes/QEMU/Servers bash configurar-servidores.sh
+# Por defecto: DISK_PATH=/tmp
+DISK_PATH="${DISK_PATH:-/tmp}"
+
 # Ejecutar: bash configurar-servicios.sh
 
 echo "=== 1. DNS: zonas en SRV_DNS_Bog ==="
-sudo virt-customize -a /tmp/srv-dns-bog.qcow2 --run-command '
+sudo virt-customize -a $DISK_PATH/srv-dns-bog.qcow2 --run-command '
 cat > /etc/bind/named.conf.local << EOF
 zone "empresa.local" {
     type master;
@@ -44,7 +48,7 @@ systemctl enable bind9
 ' 2>&1 | tail -2
 
 echo "=== 2. DHCP en SRV_DNS_Bog ==="
-sudo virt-customize -a /tmp/srv-dns-bog.qcow2 --run-command '
+sudo virt-customize -a $DISK_PATH/srv-dns-bog.qcow2 --run-command '
 cat > /etc/dhcp/dhcpd.conf << EOF
 subnet 10.1.0.0 netmask 255.255.255.0 {
     range 10.1.0.100 10.1.0.200;
@@ -59,7 +63,7 @@ systemctl enable isc-dhcp-server
 ' 2>&1 | tail -2
 
 echo "=== 3. WEB + FTP en SRV_WEB_Cuc ==="
-sudo virt-customize -a /tmp/srv-web-cuc.qcow2 --run-command '
+sudo virt-customize -a $DISK_PATH/srv-web-cuc.qcow2 --run-command '
 mkdir -p /var/www/html/empresa
 cat > /var/www/html/empresa/index.html << EOF
 <html><body>
@@ -97,8 +101,8 @@ systemctl enable vsftpd
 ' 2>&1 | tail -2
 
 echo "=== 4. LDAP en SRV_LDAP_SM + SRV_LDAP_Bar ==="
-sudo virt-customize -a /tmp/srv-ldap-sm.qcow2 --run-command '
-cat > /tmp/base.ldif << EOF
+sudo virt-customize -a $DISK_PATH/srv-ldap-sm.qcow2 --run-command '
+cat > $DISK_PATH/base.ldif << EOF
 dn: dc=empresa,dc=local
 objectClass: top
 objectClass: dcObject
@@ -122,13 +126,13 @@ EOF
 sleep 2
 ' 2>&1 | tail -2
 
-sudo virt-customize -a /tmp/srv-ldap-bar.qcow2 --run-command 'systemctl enable ssh' 2>&1 | tail -2
+sudo virt-customize -a $DISK_PATH/srv-ldap-bar.qcow2 --run-command 'systemctl enable ssh' 2>&1 | tail -2
 
 echo "=== 5. Copiando discos a GNS3 ==="
-sudo cp /tmp/srv-dns-bog.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-dns-bog.qcow2
-sudo cp /tmp/srv-web-cuc.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-web-cuc.qcow2
-sudo cp /tmp/srv-ldap-sm.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-ldap-sm.qcow2
-sudo cp /tmp/srv-ldap-bar.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-ldap-bar.qcow2
+sudo cp $DISK_PATH/srv-dns-bog.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-dns-bog.qcow2
+sudo cp $DISK_PATH/srv-web-cuc.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-web-cuc.qcow2
+sudo cp $DISK_PATH/srv-ldap-sm.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-ldap-sm.qcow2
+sudo cp $DISK_PATH/srv-ldap-bar.qcow2 /home/carlonox/GNS3/images/QEMU/Servers/srv-ldap-bar.qcow2
 sudo chown -R carlonox:carlonox /home/carlonox/GNS3/images/QEMU/Servers
 
 echo ""

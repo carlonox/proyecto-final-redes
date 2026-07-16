@@ -2,7 +2,10 @@ version: '3.9'
 
 services:
   gns3-server:
-    image: gns3/gns3-server:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: proyecto-final-redes:latest
     container_name: gns3-proyecto-final
     hostname: gns3-server
     restart: unless-stopped
