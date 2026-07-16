@@ -20,3 +20,4 @@ __pycache__/
 # Excluir archivos de sistema
 .DS_Store
 Thumbs.db
+*.exe
